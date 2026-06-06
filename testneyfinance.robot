@@ -29,11 +29,9 @@ TC-01 Login deve retornar token JWT
     ...    /usuarios/login
     ...    json=${body}
 
-    # Verificações
     Should Be Equal As Integers    ${response.status_code}    200
     Dictionary Should Contain Key    ${response.json()}    token
 
-    # Armazena o token para uso nos próximos casos de teste
     ${token_obtido}=    Get From Dictionary    ${response.json()}    token
     Set Suite Variable    ${TOKEN}    ${token_obtido}
 
@@ -69,7 +67,6 @@ TC-02 Cadastrar lancamento de receita deve retornar 200
     Should Be Equal As Strings    ${body_resp}[tipoLancamento]    RECEITA
     Should Be Equal As Numbers    ${body_resp}[valor]         5000.0
 
-    # Salva o ID para usar no TC-04 (exclusão)
     Set Suite Variable    ${LANCAMENTO_ID}    ${body_resp}[id]
 
     Log    Lançamento criado com ID: ${LANCAMENTO_ID}
@@ -91,7 +88,6 @@ TC-03 Listar lancamentos do usuario deve retornar lista nao vazia
     ${lista}=    Set Variable    ${response.json()}
     Should Not Be Empty    ${lista}
 
-    # Verifica que o lançamento criado no TC-02 está na lista
     ${primeiro}=    Get From List    ${lista}    0
     Dictionary Should Contain Key    ${primeiro}    id
     Dictionary Should Contain Key    ${primeiro}    descricao
