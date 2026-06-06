@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeyFinance — Gestão Financeira</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">Ney<span>Finance</span></div>
+    <div class="logo-sub">Gestão financeira</div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">Principal</div>
+
+    <div class="nav-item active" onclick="showPage('dashboard', this)">
+      <i class="fa-solid fa-chart-pie"></i>
+      <span>Painel</span>
+    </div>
+
+    <div class="nav-item" onclick="showPage('lancamentos', this)">
+      <i class="fa-solid fa-plus-circle"></i>
+      <span>Lançamentos</span>
+    </div>
+
+    <div class="nav-section">Análise</div>
+
+    <div class="nav-item" onclick="showPage('historico', this)">
+      <i class="fa-solid fa-list-ul"></i>
+      <span>Histórico</span>
+    </div>
+
+    <div class="nav-item" onclick="showPage('relatorios', this)">
+      <i class="fa-solid fa-chart-bar"></i>
+      <span>Relatórios</span>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-chip">
+      <div class="avatar" id="user-avatar">U</div>
+
+      <div>
+        <div class="user-name" id="user-name">Usuário</div>
+        <div class="user-role">Conta pessoal</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 12px;">
+      <button onclick="logout()" style="
+        width: 100%;
+        padding: 8px;
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 8px;
+        color: rgba(255,255,255,0.4);
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        transition: all 0.2s;
+      "
+      onmouseover="this.style.color='#f85149';this.style.borderColor='rgba(248,81,73,0.3)'"
+      onmouseout="this.style.color='rgba(255,255,255,0.4)';this.style.borderColor='rgba(255,255,255,0.1)'">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Sair
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- PAINEL -->
+  <div class="page active" id="page-dashboard">
+
+    <div class="page-header">
+      <div class="page-title">Visão Geral</div>
+      <div class="page-subtitle">Acompanhe sua saúde financeira</div>
+    </div>
+
+    <div class="metrics-grid">
+
+      <div class="metric-card saldo">
+        <div class="metric-icon">
+          <i class="fa-solid fa-wallet"></i>
+        </div>
+
+        <div class="metric-label">Saldo Atual</div>
+
+        <div class="metric-value" id="m-saldo">
+          R$ 0,00
+        </div>
+
+        <div class="metric-trend" id="m-trend">
+          — Sem movimentações
+        </div>
+      </div>
+
+      <div class="metric-card receita">
+        <div class="metric-icon">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+        </div>
+
+        <div class="metric-label">Total Receitas</div>
+
+        <div class="metric-value positive" id="m-receitas">
+          R$ 0,00
+        </div>
+
+        <div class="metric-trend" id="m-nrec">
+          0 lançamento(s)
+        </div>
+      </div>
+
+      <div class="metric-card despesa">
+        <div class="metric-icon">
+          <i class="fa-solid fa-arrow-trend-down"></i>
+        </div>
+
+        <div class="metric-label">Total Despesas</div>
+
+        <div class="metric-value negative" id="m-despesas">
+          R$ 0,00
+        </div>
+
+        <div class="metric-trend" id="m-ndep">
+          0 lançamento(s)
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Últimas Transações</div>
+      </div>
+
+      <div class="tx-list" id="dash-list">
+        <div class="empty-state">
+          <i class="fa-regular fa-folder-open"></i>
+          Nenhuma transação registrada ainda.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LANÇAMENTOS -->
+  <div class="page" id="page-lancamentos">
+
+    <div class="page-header">
+      <div class="page-title">Novo Lançamento</div>
+      <div class="page-subtitle">Registre receitas e despesas</div>
+    </div>
+
+    <div class="card">
+
+      <div id="alert-ok" class="alert success">
+        <i class="fa-solid fa-check"></i>
+        Lançamento registrado com sucesso!
+      </div>
+
+      <div class="type-toggle">
+
+        <button class="type-btn active income" id="btn-rec" onclick="setTipo('receita')">
+          <i class="fa-solid fa-plus"></i>
+          Receita
+        </button>
+
+        <button class="type-btn expense" id="btn-dep" onclick="setTipo('despesa')">
+          <i class="fa-solid fa-minus"></i>
+          Despesa
+        </button>
+
+      </div>
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label class="form-label">Descrição</label>
+
+          <input
+            type="text"
+            id="f-desc"
+            placeholder="Ex: Salário, Aluguel…"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Valor (R$)</label>
+
+          <input
+            type="number"
+            id="f-valor"
+            placeholder="0,00"
+            min="0"
+            step="0.01"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Categoria</label>
+
+          <select id="f-cat">
+            <option value="">Selecionar…</option>
+            <option>Salário</option>
+            <option>Freelance</option>
+            <option>Investimento</option>
+            <option>Alimentação</option>
+            <option>Moradia</option>
+            <option>Transporte</option>
+            <option>Saúde</option>
+            <option>Lazer</option>
+            <option>Educação</option>
+            <option>Outros</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Data</label>
+
+          <input type="date" id="f-data" />
+        </div>
+
+      </div>
+
+      <div class="btn-row">
+
+        <button class="btn primary" onclick="salvar()">
+          <i class="fa-solid fa-floppy-disk"></i>
+          Salvar lançamento
+        </button>
+
+        <button class="btn" onclick="limpar()">
+          <i class="fa-solid fa-xmark"></i>
+          Limpar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- HISTÓRICO -->
+  <div class="page" id="page-historico">
+
+    <div class="page-header">
+      <div class="page-title">Histórico</div>
+      <div class="page-subtitle">Todas as suas transações</div>
+    </div>
+
+    <div class="card">
+
+      <div class="filter-bar">
+
+        <select id="ft-tipo" onchange="renderHistorico()">
+          <option value="">Todos os tipos</option>
+          <option value="receita">Receitas</option>
+          <option value="despesa">Despesas</option>
+        </select>
+
+        <select id="ft-cat" onchange="renderHistorico()">
+          <option value="">Todas as categorias</option>
+          <option>Salário</option>
+          <option>Freelance</option>
+          <option>Investimento</option>
+          <option>Alimentação</option>
+          <option>Moradia</option>
+          <option>Transporte</option>
+          <option>Saúde</option>
+          <option>Lazer</option>
+          <option>Educação</option>
+          <option>Outros</option>
+        </select>
+
+      </div>
+
+      <div class="tx-list" id="hist-list">
+        <div class="empty-state">
+          <i class="fa-regular fa-folder-open"></i>
+          Nenhuma transação ainda.
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- RELATÓRIOS -->
+  <div class="page" id="page-relatorios">
+
+    <div class="page-header">
+      <div class="page-title">Relatórios</div>
+      <div class="page-subtitle">Análise visual das suas finanças</div>
+    </div>
+
+    <div class="report-grid">
+
+      <div class="card">
+
+        <div class="card-header">
+          <div class="card-title">Receitas × Despesas</div>
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="chartRD"></canvas>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="card-header">
+          <div class="card-title">Despesas por Categoria</div>
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="chartCat"></canvas>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <div class="card-header">
+        <div class="card-title">Ranking de Categorias</div>
+      </div>
+
+      <div class="bar-wrap" id="bar-rank">
+        <div class="empty-state">
+          <i class="fa-solid fa-chart-simple"></i>
+          Nenhuma despesa registrada.
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+
+<!-- AUTENTICAÇÃO -->
+<script>
+  // Verifica se está logado, senão redireciona para login
+  const token = localStorage.getItem('nf_token');
+  if (!token) {
+    window.location.href = 'login.html';
+  }
+
+  // Mostra o nome do usuário na sidebar
+  const nome = localStorage.getItem('nf_nome');
+  if (nome) {
+    document.getElementById('user-name').textContent = nome;
+    document.getElementById('user-avatar').textContent = nome.charAt(0).toUpperCase();
+  }
+
+  // Função de logout
+  function logout() {
+    localStorage.removeItem('nf_token');
+    localStorage.removeItem('nf_nome');
+    window.location.href = 'login.html';
+  }
+</script>
+
+</body>
+</html>

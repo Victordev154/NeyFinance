@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeyFinance — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --bg3: #21262d;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.14);
+      --text: #e6edf3;
+      --text2: #8b949e;
+      --text3: #484f58;
+      --green: #2ea043;
+      --green-light: #3fb950;
+      --green-bg: rgba(46,160,67,0.15);
+      --green-border: rgba(46,160,67,0.35);
+      --accent: #58a6ff;
+      --radius: 10px;
+      --radius-lg: 16px;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    .bg-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 50%, rgba(46,160,67,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 70% at 80% 30%, rgba(88,166,255,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 80% at 60% 80%, rgba(46,160,67,0.06) 0%, transparent 50%),
+        var(--bg);
+    }
+
+    .bg-scene::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .bg-scene::after {
+      content: '+8.4%  -2.1%  R$14.230  +3.7%  R$8.900  -0.9%';
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'DM Serif Display', serif;
+      font-size: 13px;
+      color: rgba(63,185,80,0.18);
+      letter-spacing: 0.15em;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card-wrapper {
+      display: flex;
+      width: 100%;
+      max-width: 860px;
+      min-height: 480px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--border2);
+      backdrop-filter: blur(20px);
+      animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel-left {
+      width: 42%;
+      background: linear-gradient(160deg, #1a2d1e 0%, #0f1f13 50%, #0d1117 100%);
+      border-right: 1px solid var(--green-border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel-left::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(46,160,67,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .panel-left::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(88,166,255,0.09) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .logo-area {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .logo-mark {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .logo-mark span { color: var(--green-light); }
+
+    .logo-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 5px;
+    }
+
+    .welcome-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      color: var(--text);
+      text-align: center;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .welcome-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      margin-bottom: 36px;
+      line-height: 1.5;
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 32px;
+      border-radius: 50px;
+      border: 1.5px solid rgba(63,185,80,0.5);
+      background: transparent;
+      color: var(--green-light);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-outline:hover {
+      background: var(--green-bg);
+      border-color: var(--green-light);
+      transform: translateY(-1px);
+    }
+
+    .divider-dots {
+      display: flex;
+      gap: 5px;
+      margin-top: 32px;
+    }
+
+    .divider-dots span {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+    }
+
+    .divider-dots span:nth-child(2) {
+      background: var(--green-light);
+    }
+
+    .panel-right {
+      flex: 1;
+      background: rgba(22,27,34,0.85);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 52px 48px;
+      position: relative;
+    }
+
+    .form-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 26px;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+
+    .form-subtitle {
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 36px;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .input-group i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text3);
+      font-size: 14px;
+      pointer-events: none;
+      transition: color 0.15s;
+    }
+
+    .input-group input {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 14px 16px 14px 44px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .input-group input::placeholder { color: var(--text3); }
+
+    .input-group input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px var(--green-bg);
+    }
+
+    .input-group input:focus + i,
+    .input-group:focus-within i {
+      color: var(--green-light);
+    }
+
+    .input-group input { position: relative; z-index: 1; background: var(--bg3); }
+
+    .toggle-pw {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text3);
+      font-size: 14px;
+      z-index: 2;
+      padding: 4px;
+      transition: color 0.15s;
+    }
+
+    .toggle-pw:hover { color: var(--text2); }
+
+    .forgot-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: -8px;
+      margin-bottom: 28px;
+    }
+
+    .forgot-link {
+      font-size: 12px;
+      color: var(--text3);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .forgot-link:hover { color: var(--green-light); }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: var(--green);
+      border: none;
+      border-radius: var(--radius);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      background: var(--green-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .btn-primary .spinner {
+      display: none;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    .btn-primary.loading .spinner { display: block; }
+    .btn-primary.loading .btn-text { display: none; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .divider-or {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0;
+      color: var(--text3);
+      font-size: 12px;
+    }
+
+    .divider-or::before,
+    .divider-or::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .alert {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      font-size: 12.5px;
+      margin-bottom: 16px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+    .alert.error {
+      background: rgba(218,54,51,0.12);
+      border: 1px solid rgba(218,54,51,0.3);
+      color: #f85149;
+    }
+
+    .alert.success {
+      background: var(--green-bg);
+      border: 1px solid var(--green-border);
+      color: var(--green-light);
+    }
+
+    .floater {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(22,27,34,0.8);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 7px 11px;
+      font-size: 11px;
+      color: var(--text2);
+      animation: floatUp 0.6s cubic-bezier(0.16,1,0.3,1) both;
+      pointer-events: none;
+    }
+
+    .floater .val { font-weight: 600; font-family: 'DM Serif Display', serif; font-size: 13px; }
+    .floater.pos .val { color: var(--green-light); }
+    .floater.neg .val { color: #f85149; }
+    .floater.f1 { top: 32px; right: -10px; animation-delay: 0.4s; }
+    .floater.f2 { bottom: 48px; left: -10px; animation-delay: 0.55s; }
+
+    @keyframes floatUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      .card-wrapper { flex-direction: column; min-height: auto; border-radius: 18px; }
+      .panel-left { width: 100%; padding: 36px 28px; min-height: 200px; }
+      .panel-right { padding: 36px 28px; }
+      .floater { display: none; }
+      .welcome-title { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-scene"></div>
+
+<div class="container">
+  <div class="card-wrapper">
+
+    <!-- LEFT -->
+    <div class="panel-left">
+
+      <div class="logo-area">
+        <div class="logo-mark">Ney<span>Finance</span></div>
+        <div class="logo-sub">Gestão financeira</div>
+      </div>
+
+      <div class="welcome-title">Bem-vindo</div>
+      <div class="welcome-sub">Ainda não tem conta?<br>Crie agora e comece a controlar suas finanças.</div>
+
+      <a href="register.html" class="btn-outline">
+        <i class="fa-solid fa-user-plus"></i>
+        Cadastrar-se
+      </a>
+
+      <div class="divider-dots">
+        <span></span><span></span><span></span>
+      </div>
+
+      <div class="floater pos f1">
+        <i class="fa-solid fa-arrow-trend-up" style="color:var(--green-light);font-size:10px"></i>
+        <span>Saldo</span>
+        <span class="val">+12,4%</span>
+      </div>
+      <div class="floater neg f2">
+        <i class="fa-solid fa-arrow-trend-down" style="color:#f85149;font-size:10px"></i>
+        <span>Despesas</span>
+        <span class="val">R$2.340</span>
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="panel-right">
+
+      <div class="form-title">Faça login</div>
+      <div class="form-subtitle">Acesse sua conta para continuar</div>
+
+      <div id="alert-box" class="alert error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span id="alert-msg">E-mail ou senha inválidos.</span>
+      </div>
+
+      <form onsubmit="handleLogin(event)" novalidate>
+
+        <div class="input-group">
+          <input type="email" id="f-email" placeholder="E-mail" autocomplete="email" required />
+          <i class="fa-regular fa-envelope"></i>
+        </div>
+
+        <div class="input-group">
+          <input type="password" id="f-senha" placeholder="Senha" autocomplete="current-password" required />
+          <i class="fa-solid fa-lock"></i>
+          <button type="button" class="toggle-pw" onclick="toggleSenha()" id="eye-btn" aria-label="Mostrar senha">
+            <i class="fa-regular fa-eye" id="eye-icon"></i>
+          </button>
+        </div>
+
+        <div class="forgot-row">
+          <a href="#" class="forgot-link">Esqueceu sua senha?</a>
+        </div>
+
+        <button type="submit" class="btn-primary" id="btn-login">
+          <div class="spinner"></div>
+          <span class="btn-text">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            Entrar
+          </span>
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function toggleSenha() {
+    const input = document.getElementById('f-senha');
+    const icon  = document.getElementById('eye-icon');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.className = 'fa-regular fa-eye-slash';
+    } else {
+      input.type = 'password';
+      icon.className = 'fa-regular fa-eye';
+    }
+  }
+
+  function showAlert(msg, type = 'error') {
+    const box = document.getElementById('alert-box');
+    document.getElementById('alert-msg').textContent = msg;
+    box.className = 'alert ' + type;
+    box.style.display = 'flex';
+  }
+
+  function hideAlert() {
+    document.getElementById('alert-box').style.display = 'none';
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    hideAlert();
+
+    const email = document.getElementById('f-email').value.trim();
+    const senha = document.getElementById('f-senha').value;
+
+    if (!email || !senha) {
+      showAlert('Preencha e-mail e senha.');
+      return;
+    }
+
+    const btn = document.getElementById('btn-login');
+    btn.classList.add('loading');
+
+    try {
+      const res = await fetch('http://localhost:8080/usuarios/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ login: email, senha })
+      });
+
+      if (!res.ok) {
+        showAlert('E-mail ou senha inválidos.');
+        return;
+      }
+
+      const data = await res.json();
+
+      localStorage.setItem('nf_token', data.token);
+      localStorage.setItem('nf_nome', data.nome || email);
+
+      showAlert('Login realizado! Redirecionando…', 'success');
+      setTimeout(() => window.location.href = 'index.html', 900);
+
+    } catch (err) {
+      showAlert('Não foi possível conectar ao servidor.');
+    } finally {
+      btn.classList.remove('loading');
+    }
+  }
+
+  if (localStorage.getItem('nf_token')) {
+    window.location.href = 'index.html';
+  }
+</script>
+</body>
+</html>
